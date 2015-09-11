@@ -1,0 +1,5 @@
+git config --global user.name "Jack"
+git config --global user.email "jack-lcf@yandex.ru"
+git init
+git remote add origin https://github.com/Jack-lcf/ExpertSoftTemp.git
+git pull origin master
