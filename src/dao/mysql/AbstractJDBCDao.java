@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import constants.Messages;
 import logger.Log;
 import dao.Dao;
 import dao.DaoException;

@@ -3,6 +3,7 @@ package dao.mysql;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import constants.Messages;
 import logger.Log;
 import dao.Dao;
 import dao.DaoException;

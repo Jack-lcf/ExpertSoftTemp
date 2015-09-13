@@ -1,5 +1,7 @@
 http://www.mkyong.com/java/how-to-read-and-parse-csv-file-in-java/
 https://commons.apache.org/proper/commons-csv/apidocs/org/apache/commons/csv/CSVParser.html
 http://howtodoinjava.com/2013/05/27/parse-csv-files-in-java/
+http://www.journaldev.com/2544/java-csv-parserwriter-example-using-opencsv-apache-commons-csv-and-supercsv
+http://commons.apache.org/proper/commons-csv/
 
 http://habrahabr.ru/company/mailru/blog/129476/
