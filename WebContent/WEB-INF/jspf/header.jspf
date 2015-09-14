@@ -11,7 +11,7 @@
 </head>
 <body>
     <div id="main">
-        <jsp:include page="/WEB-INF/content/MainMenu.html" />
         <div id="header">
             <div id="headertext">--Contact CSV Import--</div>
         </div>
+        <jsp:include page="/WEB-INF/content/MainMenu.html" />

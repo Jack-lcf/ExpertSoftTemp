@@ -18,7 +18,7 @@ import constants.Uri;
 /**
  * Servlet implementation class web_controller
  */
-@WebServlet(name = "/DispatcherServlet", loadOnStartup = 1, urlPatterns = { "/index","/contacts" })
+@WebServlet(name = "/DispatcherServlet", loadOnStartup = 1, urlPatterns = { "/index","/import","/contacts" })
 public class DispatcherServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     public static final String ERROR_DATA_BASE = "Database error";

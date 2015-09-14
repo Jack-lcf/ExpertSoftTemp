@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import actoins.contact.ActionContact;
+import actoins.contact.ActionContactImport;
 import constants.Command;
 import service.AbstractServiceLocator;
 import service.ServiceLocatorFactory;
@@ -16,6 +17,7 @@ public class ActionManagerImpl implements ActionManager {
 
     static {
         actions.put(Command.CONTACT_COM, ActionContact.class);
+        actions.put(Command.CONTACT_IMPORT_COM, ActionContactImport.class);
     }
 
     @Override
