@@ -8,4 +8,5 @@ public class Messages {
     public final static String CREATE_DAO_ERROR = "Create Dao instance error: ";
     public final static String CREATE_DAO_FACTORY_ERROR = "Create DaoFactory error: ";
     public final static String ROLLBACK_ERROR = "Connection rollback error: ";
+    public static final String DATA_BASE_ERROR = "An unexpected application error";
 }

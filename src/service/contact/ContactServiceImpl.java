@@ -8,7 +8,7 @@ import dao.DaoException;
 import dao.DaoFactory;
 import domain.Contact;
 
-public class ContactServiceImpl extends ServiceImpl implements ServiceContact {
+public class ContactServiceImpl extends ServiceImpl implements ContactService {
 
     public ContactServiceImpl(DaoFactory factory) {
         super(factory);

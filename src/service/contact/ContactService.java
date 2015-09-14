@@ -6,7 +6,7 @@ import dao.DaoException;
 import domain.Contact;
 import service.Service;
 
-public interface ServiceContact extends Service {
+public interface ContactService extends Service {
 
     public Integer create(Contact contact) throws DaoException;
 
