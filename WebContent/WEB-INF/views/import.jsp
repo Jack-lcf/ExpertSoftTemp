@@ -12,10 +12,9 @@
 			</c:otherwise>
 		</c:choose>
 		<section>
-			<form method="POST" onSubmit="localpath.value=filePath.value" action="action">
+			<form method="POST" action="action" enctype="multipart/form-data">
 				<p>
-					<input type="file" name="filePath" id="file">
-					<input type="hidden" name="localpath">
+					<input type="file" name="file">
 				</p>
 				<p>
 					<button type="submit">Import</button>

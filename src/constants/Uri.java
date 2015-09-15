@@ -8,4 +8,5 @@ public class Uri {
     public static final String ERROR_URI = "/error";
     
     public static final String CONTACT_MAIN_URI = "/contact/index";
+    public static final String IMPORT_URI = "/import";
 }

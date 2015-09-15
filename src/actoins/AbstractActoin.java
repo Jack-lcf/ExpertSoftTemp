@@ -3,6 +3,7 @@ package actoins;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.DaoException;
 import service.AbstractServiceLocator;
 import service.Service;
 import service.ServiceException;
@@ -21,6 +22,7 @@ public abstract class AbstractActoin {
         return serviceLocator.getService(key);
     }
 
-    abstract public String exec(HttpServletRequest request, HttpServletResponse response) throws ServiceException;
+    abstract public String exec(HttpServletRequest request, HttpServletResponse response) throws ServiceException,
+            DaoException;
 
 }

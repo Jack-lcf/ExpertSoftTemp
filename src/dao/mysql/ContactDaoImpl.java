@@ -1,11 +1,14 @@
 package dao.mysql;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import logger.Log;
+import constants.Messages;
 import dao.DaoException;
 import dao.ContactDao;
 import domain.Contact;
@@ -61,7 +64,7 @@ public class ContactDaoImpl extends AbstractJDBCDao<Contact> implements ContactD
         try {
             statement.setString(1, object.getName());
             statement.setString(2, object.getSurname());
-            statement.setString(3, object.getLogin()); 
+            statement.setString(3, object.getLogin());
             statement.setString(4, object.getEmail());
             statement.setString(5, object.getPhone());
         } catch (SQLException e) {
@@ -81,6 +84,44 @@ public class ContactDaoImpl extends AbstractJDBCDao<Contact> implements ContactD
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public Contact findByLogin(String login) throws DaoException {
+        List<Contact> list = null;
+        String query = getSelectQuery() + " WHERE `login` = ?";
+        PreparedStatement statement = null;
+        Connection connection = null;
+        try {
+            connection = getConnectionFactory().getConnection();
+            connection.setAutoCommit(false);
+            statement = connection.prepareStatement(query);
+            statement.setString(1, login);
+            ResultSet result = statement.executeQuery();
+            list = parseResultSet(result);
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                Log.error(Messages.ROLLBACK_ERROR + e1);
+            }
+            Log.error(Messages.CONNECTION_ERROR + e);
+            throw new DaoException(e);
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException | NullPointerException e) {
+                throw new DaoException(e);
+            }
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new DaoException(Messages.MORE_THAN_ONE_ERROR);
+        }
+        return list.iterator().next();
     }
 
 }

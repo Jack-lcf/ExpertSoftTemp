@@ -43,4 +43,9 @@ public class ContactServiceImpl extends ServiceImpl implements ContactService {
         return getDaoFactory().createDao(ContactDao.class);
     }
 
+    @Override
+    public Contact findByLogin(String login) throws DaoException {
+        return getContactDao().findByLogin(login);
+    }
+
 }

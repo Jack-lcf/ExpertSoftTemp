@@ -21,6 +21,13 @@ public abstract class AbstractJDBCDao<T extends AbstractEntity> implements Dao<T
     }
 
     /**
+     * @return the connectionFactory
+     */
+    public ConnectionFactory getConnectionFactory() {
+        return connectionFactory;
+    }
+
+    /**
      * return sql query to get all records from table
      *
      * SELECT * FROM [Table]

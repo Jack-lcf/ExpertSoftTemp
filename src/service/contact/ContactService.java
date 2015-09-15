@@ -18,4 +18,6 @@ public interface ContactService extends Service {
 
     public void delete(Integer id) throws DaoException;
 
+    public Contact findByLogin(String login) throws DaoException;
+
 }

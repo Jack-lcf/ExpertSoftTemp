@@ -146,6 +146,10 @@ td {
     
 }
 
+.error {
+    color: #E11;
+}
+
 #footer {
     clear: both;
     width: 800px;

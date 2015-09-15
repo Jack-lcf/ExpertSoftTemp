@@ -9,4 +9,6 @@ public class Messages {
     public final static String CREATE_DAO_FACTORY_ERROR = "Create DaoFactory error: ";
     public final static String ROLLBACK_ERROR = "Connection rollback error: ";
     public static final String DATA_BASE_ERROR = "An unexpected application error";
+    public static final String DATA_INCORRECT_ERROR = "Data file is incorrect!";
+    public static final String MORE_THAN_ONE_ERROR ="Received more than one record.";
 }
