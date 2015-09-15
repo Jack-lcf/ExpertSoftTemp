@@ -92,7 +92,7 @@ public class DispatcherServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String uri = request.getRequestURI();
         String contextPath = request.getContextPath();
-        String actionName;
+        String actionName = null;
 
         boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
         if (!isMultipartContent) {
@@ -116,31 +116,14 @@ public class DispatcherServlet extends HttpServlet {
                 actionName = action;
             }
 
-            ActionManager actionManager = ActionManagerFactory.getActionManager();
-            try {
-                String path = actionManager.execute(actionName, request, response);
-                if (path != null) {
-                    request.getRequestDispatcher(path).forward(request, response);
-                } else {
-                    if (Uri.MAIN_URI.equals(actionName)) {
-                        request.getRequestDispatcher(actionName + Uri.JSP_SUFFIX).forward(request, response);
-                    } else {
-                        request.getRequestDispatcher(Uri.JSP_PREFIX + actionName + Uri.JSP_SUFFIX).forward(request,
-                                response);
-                    }
-                }
-            } catch (Exception e) {
-                String jsp = Uri.JSP_PREFIX + Uri.ERROR_URI + Uri.JSP_SUFFIX;
-                request.setAttribute(Attribute.ERROR_KEY, Messages.DATA_BASE_ERROR);
-                getServletContext().getRequestDispatcher(jsp).forward(request, response);
-            }
-        } else {            
+        } else {
             FileItemFactory factory = new DiskFileItemFactory();
             ServletFileUpload upload = new ServletFileUpload(factory);
             List<FileItem> fields = null;
             try {
                 fields = upload.parseRequest(request);
             } catch (FileUploadException e) {
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 System.out.println("Upload error: " + e);
             }
             Iterator<FileItem> it = fields.iterator();
@@ -152,27 +135,37 @@ public class DispatcherServlet extends HttpServlet {
                     FileItem fileItem = it.next();
                     boolean isFormField = fileItem.isFormField();
                     if (isFormField) {
-                        String action = fileItem.getString();
-                        System.out.println(fileItem.getFieldName() + ": " + action);
+                        actionName = fileItem.getString();
                     } else {
-                        File file = new File(contextPath);
+                        File file = new File(Attribute.FILE_TEMP_KEY);
                         try {
-                            fileItem.write(file);
+                            fileItem.write(file);                            
+                            request.setAttribute(Attribute.FILE_KEY, file);
                         } catch (Exception e) {
                             System.out.println("Write file error: " + e);
                         }
-                        if(file.exists()){
-                            System.out.println("File name: " + file.getName());
-                            System.out.println("File path: " + file.getPath());
-                            System.out.println("File size: " + file.length());
-                        } else {
-                            System.out.println("File is null");
-                        }
-                        String fileName = fileItem.getString();
-                        System.out.println(fileName);
                     }
                 }
             }
+        }
+
+        ActionManager actionManager = ActionManagerFactory.getActionManager();
+        try {
+            String path = actionManager.execute(actionName, request, response);
+            if (path != null) {
+                request.getRequestDispatcher(path).forward(request, response);
+            } else {
+                if (Uri.MAIN_URI.equals(actionName)) {
+                    request.getRequestDispatcher(actionName + Uri.JSP_SUFFIX).forward(request, response);
+                } else {
+                    request.getRequestDispatcher(Uri.JSP_PREFIX + actionName + Uri.JSP_SUFFIX).forward(request,
+                            response);
+                }
+            }
+        } catch (Exception e) {
+            String jsp = Uri.JSP_PREFIX + Uri.ERROR_URI + Uri.JSP_SUFFIX;
+            request.setAttribute(Attribute.ERROR_KEY, Messages.DATA_BASE_ERROR);
+            getServletContext().getRequestDispatcher(jsp).forward(request, response);
         }
     }
 }

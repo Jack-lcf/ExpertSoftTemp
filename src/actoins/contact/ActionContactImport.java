@@ -1,10 +1,12 @@
 package actoins.contact;
 
+import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import logger.Log;
 import constants.Attribute;
 import constants.Messages;
 import constants.Parameter;
@@ -26,18 +28,18 @@ public class ActionContactImport extends AbstractActoin {
 
     @Override
     public String exec(HttpServletRequest request, HttpServletResponse response) throws ServiceException, DaoException {
-        //String filePath = request.getParameter(Parameter.FILE_KEY);
-        
-        /*List<Contact> contacts = null;
+        File file = (File) request.getAttribute(Parameter.FILE_KEY);
+        List<Contact> contacts = null;
         ContactCSVBuilder builder = new ContactCSVBuilder();
-        builder.buildListContacts(filePath);
-        contacts = builder.getContacts();
+        contacts = builder.getContacts(file);
+        file.delete();
         ContactService service = null;
         if (contacts != null && !contacts.isEmpty()) {
             service = ServiceLocatorFactory.getServiceLocator().getService(ContactService.class);
             for (Contact c : contacts) {
                 Contact findContact = service.findByLogin(c.getLogin());
                 if (findContact == null) {
+                    Log.info("Going to add record");
                     service.create(c);
                 } else {
                     c.setId(findContact.getId());
@@ -50,8 +52,7 @@ public class ActionContactImport extends AbstractActoin {
         } else {
             request.setAttribute(Attribute.ERROR_KEY, Messages.DATA_INCORRECT_ERROR);
             return Uri.JSP_PREFIX + Uri.IMPORT_URI + Uri.JSP_SUFFIX;
-        }*/
-        return Uri.JSP_PREFIX + Uri.IMPORT_URI + Uri.JSP_SUFFIX;
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package csv;
 
+import java.io.File;
 import java.util.List;
 
 import domain.Contact;
@@ -7,7 +8,7 @@ import domain.Contact;
 public class ContactCSVBuilder {
     private List<Contact> contacts;
     private CSVReader reader;
-    
+
     public ContactCSVBuilder() {
         reader = CSVReaderFactory.createCSVReader();
     }
@@ -15,12 +16,8 @@ public class ContactCSVBuilder {
     /**
      * @return the contacts
      */
-    public List<Contact> getContacts() {
+    public List<Contact> getContacts(File file) {
+        contacts = reader.parse(file.getPath());
         return contacts;
     }
-    
-    public void buildListContacts(String fileName){
-        contacts = reader.parse(fileName);
-    }
-
 }

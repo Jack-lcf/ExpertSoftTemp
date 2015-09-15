@@ -111,7 +111,6 @@ public abstract class AbstractJDBCDao<T extends AbstractEntity> implements Dao<T
         } finally {
             try {
                 statement.close();
-                connection.close();
             } catch (SQLException | NullPointerException e) {
                 throw new DaoException(e);
             }
@@ -119,7 +118,7 @@ public abstract class AbstractJDBCDao<T extends AbstractEntity> implements Dao<T
 
         // Get a just inserted record
         Integer id = null;
-        query = getSelectQuery() + " WHERE id = last_insert_id()";
+        query = getSelectQuery() + " WHERE id = last_insert_id();";
         statement = null;
         ResultSet resultSet = null;
         try {
@@ -133,18 +132,10 @@ public abstract class AbstractJDBCDao<T extends AbstractEntity> implements Dao<T
             throw new DaoException(e);
         } finally {
             try {
-                if (resultSet == null) {
-                    Log.error("resultSet is null");
-                } else {
-                    resultSet.close();
-                    Log.info("resultSet is ok");
-                }
+                resultSet.close();
                 statement.close();
-                Log.info("statement is ok");
                 connection.close();
-                Log.info("connection is ok");
             } catch (SQLException | NullPointerException e) {
-                Log.error("Fucking error " + e);
                 throw new DaoException(e);
             }
         }
