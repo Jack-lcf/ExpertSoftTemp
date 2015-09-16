@@ -94,17 +94,11 @@ public class ContactDaoImpl extends AbstractJDBCDao<Contact> implements ContactD
         Connection connection = null;
         try {
             connection = getConnectionFactory().getConnection();
-            connection.setAutoCommit(false);
             statement = connection.prepareStatement(query);
             statement.setString(1, login);
             ResultSet result = statement.executeQuery();
             list = parseResultSet(result);
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                Log.error(Messages.ROLLBACK_ERROR + e1);
-            }
             Log.error(Messages.CONNECTION_ERROR + e);
             throw new DaoException(e);
         } finally {
@@ -122,6 +116,58 @@ public class ContactDaoImpl extends AbstractJDBCDao<Contact> implements ContactD
             throw new DaoException(Messages.MORE_THAN_ONE_ERROR);
         }
         return list.iterator().next();
+    }
+
+    @Override
+    public List<Contact> getContacts(Integer offset, Integer noOfrecords) throws DaoException {
+        List<Contact> list = null;
+        String query = "SELECT SQL_CALC_FOUND_ROWS * FROM `contacts` LIMIT " + offset + ", " + noOfrecords;
+        PreparedStatement statement = null;
+        Connection connection = null;
+        try {
+            connection = getConnectionFactory().getConnection();
+            statement = connection.prepareStatement(query);
+            ResultSet result = statement.executeQuery();
+            list = parseResultSet(result);
+        } catch (SQLException e) {
+            Log.error(Messages.CONNECTION_ERROR + e);
+            throw new DaoException(e);
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException | NullPointerException e) {
+                throw new DaoException(e);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public Integer getNumberOfRecords() throws DaoException {
+        Integer number = 0;
+        String query = "SELECT COUNT(*) FROM `contacts`";
+        PreparedStatement statement = null;
+        Connection connection = null;
+        try {
+            connection = getConnectionFactory().getConnection();
+            statement = connection.prepareStatement(query);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                number = result.getInt(1);
+            }
+        } catch (SQLException e) {
+            Log.error(Messages.CONNECTION_ERROR + e);
+            throw new DaoException(e);
+        } finally {
+            try {
+                statement.close();
+                connection.close();
+            } catch (SQLException | NullPointerException e) {
+                throw new DaoException(e);
+            }
+        }
+        return number;
     }
 
 }

@@ -4,7 +4,7 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
     <appender name="TxtAppender" class="org.apache.log4j.FileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="E:/Java/EPAM/workspace/ExpertSoft/logs/log.txt" />
+        <param name="File" value="D:/files/Java/Files/ExpertSoft/logs/log.txt" />
         <layout class="org.apache.log4j.SimpleLayout" />
     </appender>
     <logger name="logger">

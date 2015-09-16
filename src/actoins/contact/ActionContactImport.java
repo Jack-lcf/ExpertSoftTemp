@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import logger.Log;
 import constants.Attribute;
+import constants.Command;
 import constants.Messages;
 import constants.Parameter;
 import constants.Uri;
@@ -19,6 +20,7 @@ import service.ServiceException;
 import service.ServiceLocatorFactory;
 import service.contact.ContactService;
 import actoins.AbstractActoin;
+import actoins.ActionManagerFactory;
 
 public class ActionContactImport extends AbstractActoin {
 
@@ -39,16 +41,14 @@ public class ActionContactImport extends AbstractActoin {
             for (Contact c : contacts) {
                 Contact findContact = service.findByLogin(c.getLogin());
                 if (findContact == null) {
-                    Log.info("Going to add record");
                     service.create(c);
+                    Log.info("New contact was added to database");
                 } else {
                     c.setId(findContact.getId());
                     service.update(c);
                 }
             }
-            contacts = service.getAll();
-            request.setAttribute(Attribute.CONTACTS_KEY, contacts);
-            return Uri.JSP_PREFIX + Uri.CONTACT_MAIN_URI + Uri.JSP_SUFFIX;
+            return ActionManagerFactory.getActionManager().execute(Command.CONTACT_COM, request, response);
         } else {
             request.setAttribute(Attribute.ERROR_KEY, Messages.DATA_INCORRECT_ERROR);
             return Uri.JSP_PREFIX + Uri.IMPORT_URI + Uri.JSP_SUFFIX;

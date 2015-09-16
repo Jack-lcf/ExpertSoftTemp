@@ -99,7 +99,7 @@ public class DispatcherServlet extends HttpServlet {
 
             // Getting command from request
             String action = request.getParameter(Parameter.COMMAND_KEY);
-
+            System.out.println("comm -" + action);
             if (action == null) {
 
                 int beginActionName = contextPath.length();
@@ -142,6 +142,7 @@ public class DispatcherServlet extends HttpServlet {
                             fileItem.write(file);                            
                             request.setAttribute(Attribute.FILE_KEY, file);
                         } catch (Exception e) {
+                            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                             System.out.println("Write file error: " + e);
                         }
                     }
@@ -150,8 +151,10 @@ public class DispatcherServlet extends HttpServlet {
         }
 
         ActionManager actionManager = ActionManagerFactory.getActionManager();
+        System.out.println("act-name - " + actionName);
         try {
             String path = actionManager.execute(actionName, request, response);
+            System.out.println("path - " + path);
             if (path != null) {
                 request.getRequestDispatcher(path).forward(request, response);
             } else {
