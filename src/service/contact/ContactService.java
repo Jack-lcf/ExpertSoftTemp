@@ -20,8 +20,4 @@ public interface ContactService extends Service {
 
     public Contact findByLogin(String login) throws DaoException;
 
-    public List<Contact> getContacts(Integer offset, Integer noOfrecords) throws DaoException;
-    
-    public Integer getNumberOfRecords() throws DaoException;
-
 }

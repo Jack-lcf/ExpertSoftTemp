@@ -15,12 +15,12 @@
 			<form>
 				<table border="1">
 					<tr>
-						<th>ID</th>
-						<th>Name</th>
-						<th>Surname</th>
-						<th>Login</th>
-						<th>Email</th>
-						<th>Phone</th>
+						<th><a href="contacts?method=getId&page=${currentPage}">ID</a></th>
+						<th><a href="contacts?method=getName&page=${currentPage}">Name</a></th>
+						<th><a href="contacts?method=getSurname&page=${currentPage}">Surname</a></th>
+						<th><a href="contacts?method=getLogin&page=${currentPage}">Login</a></th>
+						<th><a href="contacts?method=getEmail&page=${currentPage}">Email</a></th>
+						<th><a href="contacts?method=getPhone&page=${currentPage}">Phone</a></th>
 					</tr>
 					<c:forEach var="contacts" items="${contacts}">
 						<tr>
@@ -42,7 +42,7 @@
 									<td>${i}</td>
 								</c:when>
 								<c:otherwise>
-									<td><a href="contacts?page=${i}">${i}</a></td>
+									<td><a href="contacts?method=${method}&page=${i}">${i}</a></td>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>

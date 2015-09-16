@@ -48,14 +48,4 @@ public class ContactServiceImpl extends ServiceImpl implements ContactService {
         return getContactDao().findByLogin(login);
     }
 
-    @Override
-    public List<Contact> getContacts(Integer offset, Integer noOfrecords) throws DaoException {
-        return getContactDao().getContacts(offset, noOfrecords);
-    }
-
-    @Override
-    public Integer getNumberOfRecords() throws DaoException {
-        return getContactDao().getNumberOfRecords();
-    }
-
 }
