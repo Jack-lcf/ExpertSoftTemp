@@ -1,0 +1,2 @@
+https://tips4java.wordpress.com/2008/10/23/bean-comparator/
+http://stackoverflow.com/questions/4135998/java-comparator-given-the-name-of-the-property-to-compare
