@@ -39,7 +39,7 @@ public class ContactServiceImpl extends ServiceImpl implements ContactService {
         getContactDao().delete(id);
     }
 
-    private ContactDao getContactDao() {
+    private ContactDao getContactDao() throws DaoException {
         return getDaoFactory().createDao(ContactDao.class);
     }
 

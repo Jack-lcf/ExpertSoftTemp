@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import logger.Log;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
@@ -23,6 +25,7 @@ import constants.Attribute;
 import constants.Messages;
 import constants.Parameter;
 import constants.Uri;
+import csv.CSVFilter;
 
 /**
  * Servlet implementation class web_controller
@@ -30,7 +33,6 @@ import constants.Uri;
 @WebServlet(name = "/DispatcherServlet", loadOnStartup = 1, urlPatterns = { "/index", "/import", "/contacts" })
 public class DispatcherServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    public static final String ERROR_DATA_BASE = "Database error";
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -117,37 +119,45 @@ public class DispatcherServlet extends HttpServlet {
             }
 
         } else {
+
+            // File uploading
             FileItemFactory factory = new DiskFileItemFactory();
             ServletFileUpload upload = new ServletFileUpload(factory);
             List<FileItem> fields = null;
             try {
                 fields = upload.parseRequest(request);
             } catch (FileUploadException e) {
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                System.out.println("Upload error: " + e);
+                Log.error(Messages.UPLOAD_FILE_ERROR + e);
+                String jsp = Uri.JSP_PREFIX + Uri.ERROR_URI + Uri.JSP_SUFFIX;
+                request.setAttribute(Attribute.ERROR_KEY, Messages.UPLOAD_FILE_ERROR);
+                getServletContext().getRequestDispatcher(jsp).forward(request, response);
             }
+
             Iterator<FileItem> it = fields.iterator();
-            if (!it.hasNext()) {
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                System.out.println("No fields found");
-            } else {
-                while (it.hasNext()) {
-                    FileItem fileItem = it.next();
-                    boolean isFormField = fileItem.isFormField();
-                    if (isFormField) {
-                        actionName = fileItem.getString();
+
+            while (it.hasNext()) {
+                FileItem fileItem = it.next();
+                boolean isFormField = fileItem.isFormField();
+                if (isFormField) {
+                    actionName = fileItem.getString();
+                } else {
+                    if (!CSVFilter.accept(fileItem.getName())) {
+                        request.setAttribute(Attribute.ERROR_KEY, Messages.TYPE_INCORRECT_ERROR);
                     } else {
                         File file = new File(Attribute.FILE_TEMP_KEY);
                         try {
-                            fileItem.write(file);                            
+                            fileItem.write(file);
                             request.setAttribute(Attribute.FILE_KEY, file);
                         } catch (Exception e) {
-                            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                            System.out.println("Write file error: " + e);
+                            Log.error(Messages.FILEITEM_WRITE_ERROR + e);
+                            String jsp = Uri.JSP_PREFIX + Uri.ERROR_URI + Uri.JSP_SUFFIX;
+                            request.setAttribute(Attribute.ERROR_KEY, Messages.UPLOAD_FILE_ERROR);
+                            getServletContext().getRequestDispatcher(jsp).forward(request, response);
                         }
                     }
                 }
             }
+
         }
 
         ActionManager actionManager = ActionManagerFactory.getActionManager();
@@ -166,6 +176,7 @@ public class DispatcherServlet extends HttpServlet {
                 }
             }
         } catch (Exception e) {
+            Log.error(Messages.DATA_BASE_ERROR);
             String jsp = Uri.JSP_PREFIX + Uri.ERROR_URI + Uri.JSP_SUFFIX;
             request.setAttribute(Attribute.ERROR_KEY, Messages.DATA_BASE_ERROR);
             getServletContext().getRequestDispatcher(jsp).forward(request, response);

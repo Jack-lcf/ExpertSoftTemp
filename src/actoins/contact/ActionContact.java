@@ -29,7 +29,11 @@ public class ActionContact extends AbstractActoin {
         List<Contact> result = null;
         if (list != null && !list.isEmpty()) {
             result = new ArrayList<Contact>();
-            for (int i = offset; i < (offset + numRecords); i++) {
+            int limit = list.size();
+            if (limit >= (offset + numRecords)) {
+                limit = offset + numRecords;
+            }
+            for (int i = offset; i < limit; i++) {
                 result.add(list.get(i));
             }
         }
@@ -41,8 +45,7 @@ public class ActionContact extends AbstractActoin {
         ContactService service = ServiceLocatorFactory.getServiceLocator().getService(ContactService.class);
         List<Contact> allContacts = null;
 
-        // ------------------ SORTING
-        // -------------------------------------------------------------------------
+        // Sorting list
         String method = request.getParameter(Parameter.METHOD_KEY);
         if (method == null) {
             method = "getId";
@@ -55,29 +58,19 @@ public class ActionContact extends AbstractActoin {
         ContactComparator comparator = new ContactComparator(method);
         Collections.sort(allContacts, comparator);
 
-        // ---------------------------------------------------------------------------------------------------
-
-        // ------------------ PAGING
-        // -------------------------------------------------------------------------
+        // Paging
         int page = 1;
         int recordsPerPage = 5;
         int numOfPages = 0;
         List<Contact> selectedContacts = null;
         if (request.getParameter(Parameter.PAGE_KEY) != null) {
             page = Integer.parseInt(request.getParameter(Parameter.PAGE_KEY));
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            System.out.println("page = " + page);
-            System.out.println("rec = " + allContacts.size());
-        } else {
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            System.out.println("page key is null and page = " + page);
         }
         selectedContacts = getContacts(allContacts, (page - 1) * recordsPerPage, recordsPerPage);
         numOfPages = (int) Math.ceil(allContacts.size() * 1.0 / recordsPerPage);
         request.setAttribute(Attribute.NUMBER_OF_PAGES_KEY, numOfPages);
         request.setAttribute(Attribute.CURRENT_PAGE_KEY, page);
         request.setAttribute(Attribute.CURRENT_METHOD_KEY, method);
-        // ---------------------------------------------------------------------------------------------------
         request.setAttribute(Attribute.CONTACTS_KEY, selectedContacts);
         return Uri.JSP_PREFIX + Uri.CONTACT_MAIN_URI + Uri.JSP_SUFFIX;
     }

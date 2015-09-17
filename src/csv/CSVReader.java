@@ -8,15 +8,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import service.ServiceException;
 import domain.Contact;
 
 public class CSVReader {
-    private final String DELIMITER = ";";
+    private final String DELIMITER = ",";
     private BufferedReader br = null;
     private String[] headers = null;
 
     public CSVReader() {
-
+        super();
     }
 
     /**
@@ -26,12 +27,11 @@ public class CSVReader {
         return headers;
     }
 
-    public List<Contact> parse(String filePath) {
+    public List<Contact> parse(String filePath) throws ServiceException {
         List<Contact> result = null;
         File file = new File(filePath);
         try {
             br = new BufferedReader(new FileReader(file));
-
             String str = new String();
             if ((str = br.readLine()) != null) {
                 headers = str.split(DELIMITER);
@@ -47,17 +47,16 @@ public class CSVReader {
                     result.add(contact);
                 }
             }
-
         } catch (FileNotFoundException e) {
-            System.out.println("File not found");
+            throw new ServiceException("Validated file not found: " + e);
         } catch (IOException e) {
-            System.out.println("Read file error");
+            throw new ServiceException("Validated file read error: " + e);
         } finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (IOException e) {
-                    System.out.println("BufferedReader close error:" + e);
+                    throw new ServiceException("BufferedReader close error:" + e);
                 }
             }
         }

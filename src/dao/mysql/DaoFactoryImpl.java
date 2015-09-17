@@ -37,13 +37,14 @@ public class DaoFactoryImpl implements DaoFactory {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Dao<? extends AbstractEntity>> T createDao(Class<T> key) {
+    public <T extends Dao<? extends AbstractEntity>> T createDao(Class<T> key) throws DaoException {
         Class<? extends Dao<? extends AbstractEntity>> value = classes.get(key);
         if(value != null) {
             try {
                 return (T) value.getConstructor(ConnectionFactory.class).newInstance(connectionFactory);
             } catch (Exception e) {
                 Log.error(Messages.CREATE_DAO_ERROR + e);
+                throw new DaoException(e);
             } 
         }
         return null;

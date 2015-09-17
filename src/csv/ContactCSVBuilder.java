@@ -3,6 +3,7 @@ package csv;
 import java.io.File;
 import java.util.List;
 
+import service.ServiceException;
 import domain.Contact;
 
 public class ContactCSVBuilder {
@@ -15,8 +16,9 @@ public class ContactCSVBuilder {
 
     /**
      * @return the contacts
+     * @throws ServiceException 
      */
-    public List<Contact> getContacts(File file) {
+    public List<Contact> getContacts(File file) throws ServiceException {
         contacts = reader.parse(file.getPath());
         return contacts;
     }
